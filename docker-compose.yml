@@ -12,7 +12,7 @@ services:
     environment:
       - DEBUG=true
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/kraken_flux
-      - SECRET_KEY=development_secret_key
+      - SECRET_KEY=j9rKy7_oav66yRQh_o7cFqMXIP3x_6CSd1bOVylvbGc
     depends_on:
       - db
     networks:
