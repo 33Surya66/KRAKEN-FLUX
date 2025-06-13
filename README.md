@@ -179,6 +179,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact
 
-Your Name - [@SuryaRavi33](https://twitter.com/yourtwitter)
+Your Name - [@SuryaRavi33](https://twitter.com/SuryaRavi33)
 
 Project Link: [https://github.com/yourusername/KRAKEN-FLUX](https://github.com/yourusername/KRAKEN-FLUX)
