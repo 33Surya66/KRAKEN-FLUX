@@ -3,85 +3,44 @@ import logging.handlers
 import sys
 from pathlib import Path
 from datetime import datetime
+from logging.handlers import RotatingFileHandler
 
 from .config import config_manager
 
-def setup_logging() -> None:
-    """Configure logging for the KRAKEN-FLUX system."""
+def setup_logging():
+    """Configure logging for the application"""
+    # Create logs directory if it doesn't exist
+    log_dir = Path("logs")
+    log_dir.mkdir(exist_ok=True)
     
-    # Get logging settings from config
-    log_level = getattr(logging, config_manager.get_setting("LOG_LEVEL"))
-    log_format = config_manager.get_setting("LOG_FORMAT")
-    
-    # Create logs directory
-    logs_dir = Path("logs")
-    logs_dir.mkdir(exist_ok=True)
-    
-    # Create formatters
-    formatter = logging.Formatter(log_format)
-    
-    # Create handlers
-    # Console handler
-    console_handler = logging.StreamHandler(sys.stdout)
-    console_handler.setFormatter(formatter)
-    console_handler.setLevel(log_level)
-    
-    # File handler for all logs
-    all_logs_file = logs_dir / "kraken_flux.log"
-    file_handler = logging.handlers.RotatingFileHandler(
-        all_logs_file,
-        maxBytes=10*1024*1024,  # 10MB
-        backupCount=5
-    )
-    file_handler.setFormatter(formatter)
-    file_handler.setLevel(log_level)
-    
-    # File handler for errors
-    error_logs_file = logs_dir / "kraken_flux_error.log"
-    error_handler = logging.handlers.RotatingFileHandler(
-        error_logs_file,
-        maxBytes=10*1024*1024,  # 10MB
-        backupCount=5
-    )
-    error_handler.setFormatter(formatter)
-    error_handler.setLevel(logging.ERROR)
+    # Get log level from settings
+    log_level = getattr(logging, config_manager.LOG_LEVEL)
     
     # Configure root logger
+    logging.basicConfig(
+        level=log_level,
+        format=config_manager.LOG_FORMAT,
+        handlers=[
+            logging.StreamHandler(sys.stdout),
+            logging.FileHandler(log_dir / "app.log")
+        ]
+    )
+    
+    # Configure file handler with custom formatter
+    file_handler = logging.FileHandler(log_dir / "app.log")
+    file_formatter = logging.Formatter(config_manager.LOG_FORMAT)
+    file_handler.setFormatter(file_formatter)
+    
+    # Get root logger and add file handler
     root_logger = logging.getLogger()
-    root_logger.setLevel(log_level)
-    root_logger.addHandler(console_handler)
     root_logger.addHandler(file_handler)
-    root_logger.addHandler(error_handler)
     
-    # Create agent-specific loggers
-    agent_loggers = [
-        "GuardianAgent",
-        "ForensicAgent",
-        "ContainmentAgent",
-        "ComplianceAgent",
-        "SimulationAgent",
-        "AgentManager"
-    ]
+    # Set specific loggers
+    logging.getLogger("uvicorn").setLevel(logging.INFO)
+    logging.getLogger("uvicorn.access").setLevel(logging.INFO)
+    logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)
     
-    for logger_name in agent_loggers:
-        logger = logging.getLogger(logger_name)
-        logger.setLevel(log_level)
-        
-        # Create agent-specific log file
-        agent_log_file = logs_dir / f"{logger_name.lower()}.log"
-        agent_handler = logging.handlers.RotatingFileHandler(
-            agent_log_file,
-            maxBytes=10*1024*1024,  # 10MB
-            backupCount=5
-        )
-        agent_handler.setFormatter(formatter)
-        agent_handler.setLevel(log_level)
-        logger.addHandler(agent_handler)
-    
-    # Log system startup
-    logging.info("KRAKEN-FLUX logging system initialized")
-    logging.info(f"Log level: {logging.getLevelName(log_level)}")
-    logging.info(f"Log directory: {logs_dir.absolute()}")
+    return root_logger
 
 def get_logger(name: str) -> logging.Logger:
     """Get a logger instance for the specified name."""

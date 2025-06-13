@@ -15,7 +15,10 @@ class Settings(BaseSettings):
     API_PORT: int = 8000
     
     # Security settings
-    SECRET_KEY: str = Field(default="your-secret-key-here", min_length=32)
+    SECRET_KEY: str = Field(
+        default="development_secret_key_that_is_at_least_32_chars_long",
+        min_length=32
+    )
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
@@ -57,4 +60,4 @@ def get_settings() -> Settings:
     return Settings()
 
 # Create a global settings instance
-config_manager = get_settings() 
+config_manager = get_settings()
