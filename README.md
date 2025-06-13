@@ -1,29 +1,29 @@
- # KRAKEN-FLUX
+# KRAKEN-FLUX
 
-Kinetic Response Agent for Critical Events Network - Forensic Logic Unity eXecutor
+Autonomous Cybersecurity Platform
 
-## Overview
+## 🚧 Still Building 🚧
 
-KRAKEN-FLUX is an autonomous cybersecurity platform that deploys coordinated AI agent swarms to detect, analyze, contain, and remediate security incidents in real-time. The system operates as a truly autonomous defense capability while maintaining forensic integrity and regulatory compliance.
+This project is currently under active development. The following features are being implemented:
 
-## Key Features
+- [x] Basic API structure
+- [x] Database integration
+- [x] Agent management system
+- [ ] Advanced threat detection
+- [ ] Machine learning models
+- [ ] Real-time monitoring
+- [ ] Automated response system
+- [ ] Compliance reporting
+- [ ] User authentication
+- [ ] Role-based access control
 
-- Real-time threat detection and response
-- Autonomous incident handling
-- Forensic evidence preservation
-- Regulatory compliance automation
-- Advanced AI-driven decision making
-- Quantum-ready security architecture
+## Features
 
-## System Architecture
-
-The platform consists of several specialized AI agents:
-
-1. **Guardian Agents**: Primary threat detection and assessment
-2. **Forensic Preservation Agents**: Evidence collection and chain of custody
-3. **Containment Orchestration Agents**: Threat isolation and response
-4. **Compliance and Documentation Agents**: Regulatory and legal framework
-5. **Simulation and Modeling Agents**: Threat analysis and response planning
+- Autonomous threat detection and response
+- Real-time system monitoring
+- Machine learning-powered analysis
+- Compliance framework integration
+- Scalable architecture
 
 ## Getting Started
 
@@ -31,89 +31,65 @@ The platform consists of several specialized AI agents:
 
 - Python 3.9+
 - Docker and Docker Compose
-- PostgreSQL 14+
-- Redis 6+
+- PostgreSQL
+- Redis
 
 ### Installation
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/your-org/kraken-flux.git
-cd kraken-flux
+git clone https://github.com/yourusername/KRAKEN-FLUX.git
+cd KRAKEN-FLUX
 ```
 
-2. Create and activate a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-3. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-4. Set up environment variables:
+2. Create and configure environment variables:
 ```bash
 cp .env.example .env
 # Edit .env with your configuration
 ```
 
-5. Initialize the database:
+3. Start the application:
 ```bash
-alembic upgrade head
+docker-compose up -d
 ```
 
-6. Start the development server:
-```bash
-uvicorn app.main:app --reload
-```
+4. Access the API documentation:
+- Swagger UI: http://localhost:8000/docs
+- ReDoc: http://localhost:8000/redoc
 
-## Development
-
-### Project Structure
+## Project Structure
 
 ```
-kraken-flux/
+KRAKEN-FLUX/
 ├── app/
-│   ├── agents/           # AI agent implementations
-│   ├── core/            # Core system components
-│   ├── models/          # Data models and schemas
-│   ├── services/        # Business logic services
-│   └── api/             # API endpoints
-├── tests/               # Test suite
-├── alembic/             # Database migrations
-├── docs/                # Documentation
-└── scripts/             # Utility scripts
-```
-
-### Running Tests
-
-```bash
-pytest
-```
-
-### Code Style
-
-We use Black for code formatting and Flake8 for linting:
-
-```bash
-black .
-flake8
+│   ├── api/
+│   │   └── v1/
+│   │       └── endpoints/
+│   ├── core/
+│   ├── models/
+│   └── services/
+├── tests/
+├── data/
+├── logs/
+├── Dockerfile
+├── docker-compose.yml
+└── requirements.txt
 ```
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Security
+## Contact
 
-For security concerns, please email security@your-org.com
+Your Name - [@yourtwitter](https://twitter.com/yourtwitter)
 
-## Support
-
-For support, please open an issue in the GitHub repository or contact support@your-org.com
+Project Link: [https://github.com/yourusername/KRAKEN-FLUX](https://github.com/yourusername/KRAKEN-FLUX)
