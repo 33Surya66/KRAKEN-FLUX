@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - ./data:/app/data
+      - ./logs:/app/logs
+    environment:
+      - DEBUG=true
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/kraken_flux
+      - SECRET_KEY=development_secret_key
+    depends_on:
+      - db
+    networks:
+      - kraken_network
+
+  db:
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=kraken_flux
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - kraken_network
+
+  redis:
+    image: redis:6
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - kraken_network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  kraken_network:
+    driver: bridge
