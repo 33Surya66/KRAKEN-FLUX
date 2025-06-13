@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 import asyncio
@@ -10,6 +10,12 @@ from .core.logging_config import setup_logging
 from .core.database import db_manager
 from .core.agent_manager import AgentManager
 from .api import incidents
+from .api.v1.endpoints import (
+    agents,
+    evidence,
+    metrics,
+    system
+)
 
 # Setup logging
 setup_logging()
@@ -20,11 +26,15 @@ agent_manager = AgentManager()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Manage application startup and shutdown."""
-    # Startup
+    """
+    Lifespan context manager for FastAPI application.
+    Handles startup and shutdown events.
+    """
     try:
-        # Initialize database
-        db_manager._initialize()
+        # Startup
+        logger.info("Starting up KRAKEN-FLUX application...")
+        await db_manager.initialize()
+        logger.info("Database initialized successfully")
         
         # Initialize agents
         if not await agent_manager.initialize():
@@ -38,11 +48,12 @@ async def lifespan(app: FastAPI):
     finally:
         # Shutdown
         try:
+            logger.info("Shutting down KRAKEN-FLUX application...")
+            await db_manager.close()
+            logger.info("Database connection closed successfully")
+            
             # Clean up agents
             await agent_manager.cleanup()
-            
-            # Clean up database
-            db_manager.cleanup()
             
             logger.info("KRAKEN-FLUX system shutdown successfully")
         except Exception as e:
@@ -50,9 +61,12 @@ async def lifespan(app: FastAPI):
 
 # Create FastAPI application
 app = FastAPI(
-    title="KRAKEN-FLUX",
-    description="Kinetic Response Agent for Critical Events Network - Forensic Logic Unity eXecutor",
-    version=config_manager.get_setting("VERSION"),
+    title="KRAKEN-FLUX API",
+    description="Autonomous Cybersecurity Platform API",
+    version=config_manager.VERSION,
+    docs_url="/api/docs",
+    redoc_url="/api/redoc",
+    openapi_url="/api/openapi.json",
     lifespan=lifespan
 )
 
@@ -66,15 +80,19 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(incidents.router, prefix="/api/v1", tags=["incidents"])
+app.include_router(agents.router, prefix="/api/v1/agents", tags=["agents"])
+app.include_router(evidence.router, prefix="/api/v1/evidence", tags=["evidence"])
+app.include_router(metrics.router, prefix="/api/v1/metrics", tags=["metrics"])
+app.include_router(system.router, prefix="/api/v1/system", tags=["system"])
 
 @app.get("/")
 async def root():
-    """Root endpoint."""
+    """Root endpoint returning API information."""
     return {
-        "status": "operational",
-        "version": config_manager.get_setting("VERSION"),
-        "system": "KRAKEN-FLUX"
+        "name": "KRAKEN-FLUX API",
+        "version": config_manager.VERSION,
+        "description": "Autonomous Cybersecurity Platform API",
+        "status": "operational"
     }
 
 @app.get("/health")
